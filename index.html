@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>App Review Analyzer</title>
+  <link rel="stylesheet" href="reviewscraperstyle.css" />
+  <script>
+    async function updateFooter() {
+      try {
+        const res = await fetch('https://4484a312-fdc8-453a-960e-718d9be55d1a-00-d0tmikr2sawv.janeway.replit.dev/get_footer');
+        const html = await res.text();
+        document.getElementById('footer').innerHTML = html;
+      } catch (e) {
+        document.getElementById('footer').textContent = "Unable to load footer.";
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>Google Play App Analyzer</h1>
+    <input type="text" id="shareLink" placeholder="Paste a Google Play share link here..." />
+    <button onclick="analyzeApp()">Analyze</button>
+    <div class="result" id="result"></div>
+  </div>
+
+  <footer id="footer" style="text-align: center; margin-top: 2rem; color: #888; font-size: 0.9rem;"></footer>
+
+  <script>
+    function extractPackageName(url) {
+      try {
+        const u = new URL(url);
+        const id = u.searchParams.get("id");
+        return id || url; // fallback if only raw ID is given
+      } catch (e) {
+        return url; // assume it's already a package name
+      }
+    }
+
+    async function analyzeApp() {
+      const input = document.getElementById("shareLink").value.trim();
+      const packageName = extractPackageName(input);
+
+      const response = await fetch(`https://4484a312-fdc8-453a-960e-718d9be55d1a-00-d0tmikr2sawv.janeway.replit.dev/${packageName}`);
+      const data = await response.json();
+
+      document.getElementById("result").innerHTML = `
+        <img src="${data.icon}" alt="App Icon" />
+        <h2>${data.title}</h2>
+        <p class="meta">By ${data.developer} | ${data.genre}</p>
+        <p class="meta">${data.installs} installs • ${data.score} ⭐ (${data.review_count} reviews)</p>
+        <p class="meta">Price: ${data.price}</p>
+        <div class="summary">
+          <h3>📝 Description Summary</h3>
+          <p>${data.description}</p>
+        </div>
+        <div class="summary">
+          <h3>💬 Review Summary</h3>
+          <p>${data.review_summary}</p>
+        </div>
+        <p><a href="${data.URL}" target="_blank">View on Google Play</a></p>
+      `;
+    }
+
+    // Call updateFooter only after footer element exists
+    updateFooter();
+  </script>
+</body>
+</html>
