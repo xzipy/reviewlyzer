@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>App Review Analyzer</title>
+  <title>Reviewlyzer | Transparent App Analysis</title>
   <link rel="stylesheet" href="reviewscraperstyle.css" />
   <script>
     async function updateFooter() {
@@ -19,8 +19,8 @@
 </head>
 <body>
   <div class="container">
-    <h1>Google Play App Analyzer</h1>
-    <input type="text" id="shareLink" placeholder="Paste a Google Play share link here..." />
+    <h1>Reviewlyzer</h1>
+    <input type="text" id="shareLink" placeholder="Paste a Google Play Store share link here..." />
     <button onclick="analyzeApp()">Analyze</button>
     <div class="result" id="result"></div>
   </div>
@@ -32,9 +32,9 @@
       try {
         const u = new URL(url);
         const id = u.searchParams.get("id");
-        return id || url; // fallback if only raw ID is given
+        return id || url;
       } catch (e) {
-        return url; // assume it's already a package name
+        return url;
       }
     }
 
@@ -63,7 +63,6 @@
       `;
     }
 
-    // Call updateFooter only after footer element exists
     updateFooter();
   </script>
 </body>
